@@ -1,4 +1,22 @@
-<div class="w-full overflow-hidden">
+<div x-data="{
+    height: 0,
+    conversationElement: null,
+    markAsRead: null
+}" x-init="conversationElement = $refs.conversation;
+height = conversationElement.scrollHeight;
+$nextTick(() => conversationElement.scrollTop = height);
+
+Echo.private('users.{{ Auth()->User()->id }}')
+    .notification((notification) => {
+        if (notification['type'] == 'App\\Notifications\\MessageRead' &&
+            notification['conversation_id'] == {{ $this->selectedConversation->id }}) {
+            markAsRead = true;
+        }
+    });"
+    @scroll-bottom.window="$nextTick(() => conversationElement.scrollTop = conversationElement.scrollHeight);"
+    class="w-full overflow-hidden">
+
+
     <div class="border-b flex flex-col overflow-y-scroll grow h-full">
         {{-- header --}}
         <header class="w-full sticky inset-x-0 flex pb-[5px] pt-[5px] top-0 z-10 bg-white border-b ">
@@ -31,7 +49,7 @@
 
             </div>
         </header>
-        <main
+        <main id="conversation" x-ref="conversation"
             class="flex flex-col gap-3 p-2.5 overflow-y-auto  flex-grow overscroll-contain overflow-x-hidden w-full my-auto">
             @if ($loadedMessages)
                 @foreach ($loadedMessages as $key => $message)
@@ -65,7 +83,7 @@
                                     'text-gray-500' => !($message->sender_id === auth()->id()),
                                     'text-white' => $message->sender_id === auth()->id(),
                                 ])>
-                                    5:25 am
+                                    {{ $message->created_at->format('g:i a') }}
                                 </p>
 
                                 {{-- message status --}}
@@ -106,23 +124,20 @@
 
             <div class=" p-2 border-t">
 
-                <form x-data="{ body: @entangle('body') }" @submit.prevent="$wire.sendMessage" method="POST" autocapitalize="off">
-
+                <form x-data="{ body: @entangle('body').defer }" @submit.prevent="
+    $wire.sendMessage();
+    body = '';" method="POST"
+                    autocapitalize="off">
                     @csrf
-
-                    <input type="hidden" autocomplete="false" style="display:none">
-
                     <div class="grid grid-cols-12">
                         <input x-model="body" wire:model.defer="body" type="text" autocomplete="off" autofocus
                             placeholder="write your message here" maxlength="1700"
-                            class="col-span-10 bg-gray-100 border-0 outline-0 focus:border-0 focus:ring-0 hover:ring-0 rounded-lg  focus:outline-none">
-
-
-                        <button x-bind:disabled="!body.trim()" class="col-span-2" type='submit'>Send</button>
-
+                            class="col-span-10 bg-gray-100 border-0 outline-0 focus:border-0 focus:ring-0 hover:ring-0 rounded-lg focus:outline-none">
+                        <button x-bind:disabled="!body.trim()" class="col-span-2" type="submit">Send</button>
                     </div>
-
                 </form>
+
+
 
                 @error('body')
                     <p> {{ $message }} </p>
