@@ -13,6 +13,7 @@ return new class extends Migration
     {
         Schema::create('conversations', function (Blueprint $table) {
             $table->id();
+     
             $table->unsignedBigInteger('sender_id'); // or uuid()
             $table->foreign('sender_id')->references('id')->on('users');
 

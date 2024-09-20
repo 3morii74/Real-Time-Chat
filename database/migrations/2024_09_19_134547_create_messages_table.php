@@ -12,6 +12,9 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('messages', function (Blueprint $table) {
+
+    
+            $table->foreignId('conversation_id')->constrained()->cascadeOnDelete();
             $table->unsignedBigInteger('sender_id'); // or uuid()
             $table->foreign('sender_id')->references('id')->on('users');
 

@@ -26,7 +26,7 @@
                 </div>
 
 
-                <h6 class="font-bold truncate">{{ fake()->name() }}</h6>
+                <h6 class="font-bold truncate">{{$selectedConversation->getReceiver()->email}}</h6>
 
 
             </div>
