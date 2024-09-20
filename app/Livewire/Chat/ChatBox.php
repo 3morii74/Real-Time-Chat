@@ -3,6 +3,7 @@
 namespace App\Livewire\Chat;
 
 use App\Models\Message;
+use Illuminate\Database\Console\Migrations\RefreshCommand;
 use Livewire\Component;
 
 class ChatBox extends Component
@@ -69,22 +70,22 @@ class ChatBox extends Component
 
 
         $this->reset('body');
-      // dd($createdMessage);
+        // dd($createdMessage);
         #scroll to bottom
-     $this->dispatch('scroll-bottom');
+        $this->dispatch('scroll-bottom');
 
 
         #push the message
         $this->loadedMessages->push($createdMessage);
 
 
-        // #update conversation model
-        // $this->selectedConversation->updated_at = now();
-        // $this->selectedConversation->save();
+        #update conversation model
+        $this->selectedConversation->updated_at = now();
+        $this->selectedConversation->save();
 
 
-        // #refresh chatlist
-        // $this->emitTo('chat.chat-list', 'refresh');
+
+         $this->dispatch('refresh');
 
         #broadcast
 
