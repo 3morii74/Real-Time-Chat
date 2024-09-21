@@ -49,7 +49,28 @@ Echo.private('users.{{ Auth()->User()->id }}')
 
             </div>
         </header>
-        <main id="conversation" x-ref="conversation"
+        <main
+            @scroll="
+        scrollTop = $el.scrollTop;
+  
+        if(scrollTop <= 0){
+  
+            Livewire.dispatch('loadMore');
+  
+        }
+       
+       "
+            @update-chat-height.window="
+  
+           newHeight= $el.scrollHeight;
+  
+           oldHeight= height;
+           $el.scrollTop= newHeight- oldHeight;
+  
+           height=newHeight;
+       
+       "
+            id="conversation" x-ref="conversation"
             class="flex flex-col gap-3 p-2.5 overflow-y-auto  flex-grow overscroll-contain overflow-x-hidden w-full my-auto">
             @if ($loadedMessages)
 
