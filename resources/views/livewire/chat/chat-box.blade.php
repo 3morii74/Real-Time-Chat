@@ -11,6 +11,7 @@ Echo.private('users.{{ Auth()->User()->id }}')
         if (notification['type'] == 'App\\Notifications\\MessageRead' &&
             notification['conversation_id'] == {{ $this->selectedConversation->id }}) {
             markAsRead = true;
+         
         }
     });"
     @scroll-bottom.window="$nextTick(() => conversationElement.scrollTop = conversationElement.scrollHeight);"
@@ -173,7 +174,8 @@ Echo.private('users.{{ Auth()->User()->id }}')
                         <input x-model="body" wire:model.defer="body" type="text" autocomplete="off" autofocus
                             placeholder="write your message here" maxlength="1700"
                             class="col-span-10 bg-gray-100 border-0 outline-0 focus:border-0 focus:ring-0 hover:ring-0 rounded-lg focus:outline-none">
-                        <button x-bind:disabled="!body.trim()" class="col-span-2" type="submit">Send</button>
+                        <button x-bind:disabled="!body || !body.trim()" class="col-span-2" type="submit">Send</button>
+
                     </div>
                 </form>
 

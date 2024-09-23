@@ -6,6 +6,7 @@ use App\Models\Message;
 use App\Notifications\MessageSent;
 use Illuminate\Database\Console\Migrations\RefreshCommand;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
 use Livewire\Component;
 
 class ChatBox extends Component
@@ -17,27 +18,26 @@ class ChatBox extends Component
     public $paginate_var = 10;
 
     protected $listeners = [
-        'loadMore'
+        'loadMore',
+        'sendMessage',
     ];
 
 
-    public function getListeners()
+
+    public function getListeners(): array
     {
-       
         $auth_id = auth()->user()->id;
-        
+
         return [
-
             'loadMore',
-            "echo-private:users.{$auth_id},.Illuminate\\Notifications\\Events\\BroadcastNotificationCreated" =>  'broadcastedNotification'
-
+            "echo-private:users.{$auth_id},.Illuminate\\Notifications\\Events\\BroadcastNotificationCreated" => 'broadcastedNotifications'
         ];
-        
     }
 
     public function broadcastedNotifications($event)
     {
-//
+        //
+       
 
         if ($event['type'] == MessageSent::class) {
 
@@ -67,7 +67,7 @@ class ChatBox extends Component
     public function loadMore(): void
     {
 
-       
+
         #increment 
         $this->paginate_var += 5;
 

@@ -19,7 +19,7 @@ Echo.private('users.{{ Auth()->User()->id }}')
     .notification((notification) => {
         if (notification['type'] == 'App\\Notifications\\MessageRead' || notification['type'] == 'App\\Notifications\\MessageSent') {
 
-            window.Livewire.emit('refresh');
+            window.Livewire.dispatch('refresh');
         }
     });" class="flex flex-col transition-all h-full overflow-hidden">
 

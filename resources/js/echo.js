@@ -13,3 +13,13 @@ window.Echo = new Echo({
     forceTLS: (import.meta.env.VITE_PUSHER_SCHEME ?? 'https') === 'https',
     enabledTransports: ['ws', 'wss'],
 });
+
+
+// // Listen for notifications
+// const auth_id = document.head.querySelector('meta[name="user-id"]').content; // Ensure you have this in your HTML
+
+// Echo.private(`users.${auth_id}`)
+//     .notification((notification) => {
+//         Livewire.emit('broadcastedNotifications', notification);
+//     });
+
